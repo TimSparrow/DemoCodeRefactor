@@ -3,12 +3,20 @@
 
 include_once __DIR__ . '/bootstrap/bootstrap.php';
 
-use View\ReportView;
-use Service\CsvReporter
+use App\Service\BinListNetValidator;
+use App\Service\ExchangeRateFetcher;
+use App\View\ReportView;
+use App\Service\CsvReporter;
+use Guzzle\Http\Client;
 
 $source = $argv[1];
 
-$reporter = new CsvReporter($source);
+// The following should normally be initialized by autowiring
+$client = new Client();
+$binValidator = new BinListNetValidator($client);
+$exchange = new ExchangeRateFetcher();
+
+$reporter = new CsvReporter($source, $binValidator, $exchange);
 $report = $reporter->createReport();
 $view = new ReportView($report);
 $view->show();

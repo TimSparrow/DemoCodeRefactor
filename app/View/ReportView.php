@@ -1,8 +1,8 @@
 <?php
 
-namespace View;
+namespace App\View;
 
-use Models\Report;
+use App\Models\Report;
 
 class ReportView
 {
@@ -14,4 +14,5 @@ class ReportView
             echo $report . PHP_EOL;
         }
     }
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Service;
+namespace App\Service;
 
 interface BinValidationService
 {

@@ -2,15 +2,15 @@
 
 
 namespace App\Service;
-use Models\Report;
-use Service\BinValidationService;
-use Models\CountryData;
-use View\ReportView;
+use App\Models\Report;
+use App\Service\BinValidationService;
+use App\Models\CountryData;
+use App\View\ReportView;
 class CsvReporter
 {
-    private const BASE_CURRENCY = "EUR";
-    private const COMMISSION_EU = 0.01;
-    private const COMMISSION_DEFAULT = 0.02;
+    private const string BASE_CURRENCY = "EUR";
+    private const float COMMISSION_EU = 0.01;
+    private const float COMMISSION_DEFAULT = 0.02;
 
     public function __construct(
         private readonly string                $csvFile,
@@ -19,7 +19,7 @@ class CsvReporter
     )
     {
         if (!file_exists($csvFile)) {
-            throw new Exception("File not found: $csvFile");
+            throw new \Exception("File not found: $csvFile");
         }
 
     }

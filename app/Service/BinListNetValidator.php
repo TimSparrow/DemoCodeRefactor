@@ -1,10 +1,10 @@
 <?php
 
-namespace Service;
+namespace App\Service;
 
-use Exceptions\InvalidBinException;
+use App\Exceptions\InvalidBinException;
 use Guzzle\Http\Client;
-use Service\BinValidationService;
+use App\Service\BinValidationService;
 
 class BinListNetValidator implements BinValidationService
 {
