@@ -1,6 +1,7 @@
 <?php
 
-namespace Models;
+namespace Test\Models;
+
 use App\Models\CountryData;
 
 use PHPUnit\Framework\TestCase;

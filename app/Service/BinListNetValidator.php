@@ -3,16 +3,16 @@
 namespace App\Service;
 
 use App\Exceptions\InvalidBinException;
-use Guzzle\Http\Client;
 use App\Service\BinValidationService;
+use Guzzle\Http\ClientInterface;
 
 class BinListNetValidator implements BinValidationService
 {
 
-    private const SERVICE_URL = 'https://lookup.binlist.net/';
+    public const string SERVICE_URL = 'https://lookup.binlist.net/';
 
 
-    public function __construct(private readonly Client $client)
+    public function __construct(private readonly ClientInterface $client)
     {
 
     }

@@ -1,17 +1,21 @@
 <?php
 
-namespace Models;
+namespace Test\Models;
 
 use App\Models\Report;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Random\Randomizer;
 
 /**
- * @covers Models\Report
+ * @covers App\Models\Report
  */
-class ReportTest extends MockeryTestCase{
+class ReportTest extends MockeryTestCase {
 
-    public function __construct(private readonly Randomizer $randomizer){}
+    public function setUp(): void
+    {
+        $this->randomizer = new Randomizer;
+    }
+
 
     /**
      * A new report should be created as empty
@@ -32,7 +36,7 @@ class ReportTest extends MockeryTestCase{
         $this->assertContains($transaction, $report->getTransactions());
     }
 
-    public function shouldAddTransactionToNonEptyReport(): void {
+    public function shouldAddTransactionToNonEmptyReport(): void {
         $report = new Report();
         $transaction1 = $this->randomizer->getFloat(0.0, 3.0);
 

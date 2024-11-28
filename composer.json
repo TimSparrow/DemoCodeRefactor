@@ -9,7 +9,11 @@
   },
   "autoload": {
     "psr-4": {
-      "\\App\\" : "/app",
+      "\\App\\" : "/app"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
       "\\Test\\" : "/Tests"
     }
   }
