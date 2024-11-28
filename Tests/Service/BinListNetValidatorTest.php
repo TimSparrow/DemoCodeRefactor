@@ -11,9 +11,8 @@ use GuzzleHttp\Psr7\Response;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversFunction;
 use Psr\Http\Message\ResponseInterface;
-use Random\Randomizer;
+
 
 #[CoversClass(\App\Service\BinListNetValidator::class)]
 class BinListNetValidatorTest extends MockeryTestCase

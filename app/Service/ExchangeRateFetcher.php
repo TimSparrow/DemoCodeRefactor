@@ -3,31 +3,31 @@
 
 namespace App\Service;
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+
 class ExchangeRateFetcher implements ExchangeRateInterface
 {
-    private const API_URL = 'https://api.apilayer.com/exchangerates_data/latest';
+    public const string API_URL = 'https://api.apilayer.com/exchangerates_data/latest';
 
-    private const BASE_CURRENCY = 'EUR';
+    public const string BASE_CURRENCY = 'EUR'; // should be a parameter
 
 
     private array $rates;
 
 
 
-    public function __construct()
+    public function __construct(private readonly ClientInterface $client, string $apiKey)
     {
-        $this->fetchRates();
+        $this->fetchRates($apiKey);
     }
 
 
-    private function fetchRates(): void
+    private function fetchRates(string $apiKey): void
     {
-        $client = new Client();
-        $apiKey = getenv('EXCHANGE_RATES_API_KEY');
         $headers = [
             'apikey' => $apiKey,
         ];
-        $response = $client->get(self::getServiceUrl(),  $headers);
+        $response = $this->client->get(self::getServiceUrl(),  $headers);
         $rates = json_decode($response->getBody(), true);
         $this->rates = $rates['rates']; // discard the metadata
     }
@@ -42,7 +42,7 @@ class ExchangeRateFetcher implements ExchangeRateInterface
     }
 
 
-    private static function getServiceUrl(): string
+    public static function getServiceUrl(): string
     {
         return self::API_URL . "?base=" . self::BASE_CURRENCY;
     }

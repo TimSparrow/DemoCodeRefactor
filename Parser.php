@@ -14,7 +14,8 @@ $source = $argv[1];
 // The following should normally be initialized by autowiring
 $client = new Client();
 $binValidator = new BinListNetValidator($client);
-$exchange = new ExchangeRateFetcher();
+$exchange = new ExchangeRateFetcher($client, getenv('EXCHANGE_RATES_API_KEY'));
+
 try {
     $reporter = new CsvReporter($source, $binValidator, $exchange);
     $report = $reporter->createReport();
