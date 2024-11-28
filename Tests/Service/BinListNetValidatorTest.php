@@ -2,19 +2,24 @@
 
 namespace Test\Service;
 
+use App\Exceptions\InvalidBinException;
 use App\Service\BinListNetValidator;
 use Faker\Factory;
 use Faker\Generator;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Psr7\Response;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
+use Psr\Http\Message\ResponseInterface;
 use Random\Randomizer;
 
-/**
- * @covers \App\Service\BinListNetValidator
- */
+#[CoversClass(\App\Service\BinListNetValidator::class)]
 class BinListNetValidatorTest extends MockeryTestCase
 {
+
+    private const string RESPONSE_OK = BinListNetValidator::HTTP_STATUS_OK;
     private $validator;
     private ClientInterface $client;
 
@@ -29,9 +34,7 @@ class BinListNetValidatorTest extends MockeryTestCase
     }
 
 
-    /**
-     * @covers \App\Service\BinListNetValidator::getCountryByBinNumber
-     */
+
     public function testShouldIssueAndParseBinListNet(): void
     {
         $bin = $this->getRandomBinNumber();
@@ -51,11 +54,44 @@ class BinListNetValidatorTest extends MockeryTestCase
         $this->assertEquals($countryCode, $country);
     }
 
-    private function mockBinListNetResponse(string $countryCode): string
+    public function testShouldRequestServerAndFailIfServerResponseNotOK(): void
     {
-        return json_encode([
+        $bin = $this->getRandomBinNumber();
+        $countryCode = $this->getRandomCountryCode();
+
+        // create a minimal response containing the country code
+        $mockReturn = $this->mockBinListNetResponseNotOk($countryCode);
+        $this->client->shouldReceive('get')
+            ->once()->withArgs(function($args) use ($bin) {
+
+                if(!preg_match('/(^.*\/)(\d{6})$/', $args, $matches)) {
+                    return false;
+                }
+                return ($matches[2] === $bin) && ($matches[1] === BinListNetValidator::SERVICE_URL);
+            })->andReturn($mockReturn);
+
+        $this->expectException(InvalidBinException::class);
+        $country = $this->validator->getCountryByBinNumber($bin);
+
+    }
+
+    private function mockBinListNetResponse(string $countryCode): ResponseInterface
+    {
+        $body = json_encode([
             'country' => ['alpha2' => $countryCode],
         ]);
+
+        return new Response(self::RESPONSE_OK, ['Content-Type' => 'application/json'], $body);
+    }
+
+    private function mockBinListNetResponseNotOk(string $countryCode): ResponseInterface
+    {
+        $errors = [400, 404, 403, 500]; // throw one of these
+        $code = $this->faker->randomElement($errors);
+        $reasonPhrase = 'Server Error';
+        $response = new Response($code, [], $reasonPhrase);
+
+        return $response;
     }
 
     private function getRandomCountryCode(): string
