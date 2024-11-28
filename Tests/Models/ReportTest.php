@@ -4,12 +4,13 @@ namespace Test\Models;
 
 use App\Models\Report;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Random\Randomizer;
 
-/**
- * @covers \App\Models\Report
- */
+#[CoversClass(\App\Models\Report::class)]
 class ReportTest extends MockeryTestCase {
+
+    private Randomizer $randomizer;
 
     public function setUp(): void
     {
@@ -26,7 +27,7 @@ class ReportTest extends MockeryTestCase {
         $this->assertEmpty($report->getTransactions());
     }
 
-    public function shouldAddTransaction(): void {
+    public function testShouldAddTransaction(): void {
         $transaction = $this->randomizer->getFloat(0.0, 3.0);
 
         $report = new Report();
@@ -36,7 +37,7 @@ class ReportTest extends MockeryTestCase {
         $this->assertContains($transaction, $report->getTransactions());
     }
 
-    public function shouldAddTransactionToNonEmptyReport(): void {
+    public function testShouldAddTransactionToNonEmptyReport(): void {
         $report = new Report();
         $transaction1 = $this->randomizer->getFloat(0.0, 3.0);
 

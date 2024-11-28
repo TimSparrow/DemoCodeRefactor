@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<phpunit bootstrap="./bootstrap/bootstrap.php">
+<phpunit bootstrap="./bootstrap/bootstrap.php"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnPhpunitDeprecations="true"
+>
 
 <testsuites>
     <testsuite name="Refactoring test suite">
