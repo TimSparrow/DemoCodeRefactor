@@ -14,6 +14,8 @@ use Psr\Http\Message\ResponseInterface;
 
 class ExchangeRateFetcherTest extends MockeryTestCase
 {
+    private const BASE_CURRENCY = 'EUR';
+
     private ClientInterface | Mockery\MockInterface $client;
     private ExchangeRateFetcher $fetcher;
 
@@ -34,20 +36,16 @@ class ExchangeRateFetcherTest extends MockeryTestCase
                     return false;
                 }
 
-                print_r($matches);
-
-                print_r($headers);
-
                 return (
-                    $matches[0] == ExchangeRateFetcher::getServiceUrl() &&
+                    $matches[0] == ExchangeRateFetcher::getServiceUrl(self::BASE_CURRENCY) &&
                     $matches[1] == ExchangeRateFetcher::API_URL &&
-                    $matches[2] == ExchangeRateFetcher::BASE_CURRENCY &&
+                    $matches[2] == self::BASE_CURRENCY &&
                     is_array($headers) && $headers['apikey'] == $apiKey
 
                 );
             }
         )->andReturn($this->mockServiceResponse());
-        $this->fetcher = new ExchangeRateFetcher($this->client, $apiKey);
+        $this->fetcher = new ExchangeRateFetcher($this->client, self::BASE_CURRENCY, $apiKey);
 
         // do some tests with the loaded result
     }
@@ -56,10 +54,10 @@ class ExchangeRateFetcherTest extends MockeryTestCase
     {
         $apiKey = $this->faker->word();
         $currency = $this->faker->currencyCode();
-        $rate = $this->faker->randomFloat();
+        $rate = $this->faker->randomFloat(null, 0.01, 100);
         $exchangeRates = $this->mockServiceResponse([$currency => $rate]);
         $this->client->shouldReceive('get')->once()->andReturn($exchangeRates);
-        $this->fetcher = new ExchangeRateFetcher($this->client, $apiKey);
+        $this->fetcher = new ExchangeRateFetcher($this->client, self::BASE_CURRENCY, $apiKey);
         $actualRate = $this->fetcher->getExchangeRate($currency);
         $this->assertEquals($rate, $actualRate);
     }
@@ -80,6 +78,22 @@ class ExchangeRateFetcherTest extends MockeryTestCase
         }
 
         return new Response(200, [], json_encode(['rates' => $rates]));
+    }
+
+    public function testShouldConvertAmount(): void
+    {
+        $amount = $this->faker->randomFloat();
+        $currency = $this->faker->currencyCode();
+        $rate = $this->faker->randomFloat(null, 0.01, 100);
+        $apiKey = $this->faker->word();
+        $this->client->shouldReceive('get')->once()->andReturn($this->mockServiceResponse([$currency => $rate]));
+        $this->fetcher = new ExchangeRateFetcher($this->client, self::BASE_CURRENCY, $apiKey);
+        $amountConverted = $this->fetcher->getAmountConverted($amount, $currency);
+        if ($currency == self::BASE_CURRENCY) {
+            $this->assertEquals($amount, $amountConverted);
+        } else {
+            $this->assertEqualsWithDelta($amount / $rate, $amountConverted, 0.01);
+        }
     }
 
 }

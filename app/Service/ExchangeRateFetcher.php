@@ -12,11 +12,14 @@ class ExchangeRateFetcher implements ExchangeRateInterface
     public const string BASE_CURRENCY = 'EUR'; // should be a parameter
 
 
+
     private array $rates;
 
 
-
-    public function __construct(private readonly ClientInterface $client, string $apiKey)
+    public function __construct(
+        private readonly ClientInterface $client,
+        private readonly string $baseCurrency,
+        string $apiKey)
     {
         $this->fetchRates($apiKey);
     }
@@ -27,7 +30,7 @@ class ExchangeRateFetcher implements ExchangeRateInterface
         $headers = [
             'apikey' => $apiKey,
         ];
-        $response = $this->client->get(self::getServiceUrl(),  $headers);
+        $response = $this->client->get(self::getServiceUrl($this->getBaseCurrency()),  $headers);
         $rates = json_decode($response->getBody(), true);
         $this->rates = $rates['rates']; // discard the metadata
     }
@@ -41,9 +44,24 @@ class ExchangeRateFetcher implements ExchangeRateInterface
         return $this->rates[$currencyCode];
     }
 
-
-    public static function getServiceUrl(): string
+    public function getAmountConverted(float $amount, string $currencyCode): float
     {
-        return self::API_URL . "?base=" . self::BASE_CURRENCY;
+        if ($currencyCode === $this->getBaseCurrency()) {
+            return $amount;
+        }
+
+        $rate = $this->getExchangeRate($currencyCode);
+        return ($rate > 0) ? $amount / $rate : $amount;
+    }
+
+
+    public static function getServiceUrl(string $baseCurrency): string
+    {
+        return self::API_URL . "?base=" . $baseCurrency;
+    }
+
+    public function getBaseCurrency(): string
+    {
+        return $this->baseCurrency;
     }
 }
