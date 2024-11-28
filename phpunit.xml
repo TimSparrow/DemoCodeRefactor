@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpunit bootstrap="./bootstrap/bootstrap.php">
+
+<testsuites>
+    <testsuite name="Refactoring test suite">
+        <directory>./Tests</directory>
+    </testsuite>
+</testsuites>
+
+</phpunit>

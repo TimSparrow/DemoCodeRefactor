@@ -1,17 +1,21 @@
 <?php
 
-namespace Test\Models;
+
+namespace Models;
 
 use App\Models\CountryData;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers \App\Models\CountryData
- */
+
+
+
+#[CoversClass(CountryData::class)]
 class CountryDataTest extends TestCase
 {
-    private function getEuDataStream(): array
+    public static  function getEuDataStream(): array
     {
        return [
 
@@ -21,7 +25,7 @@ class CountryDataTest extends TestCase
        ];
     }
 
-    private function getNonEuDataStream(): array
+    public static function getNonEuDataStream(): array
     {
         return [
             ['UA'],
@@ -30,14 +34,13 @@ class CountryDataTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getEuDataStream
-     */
+    #[DataProvider('getEuDataStream')]
     public function testEuDataStream(string $countryCode): void
     {
         $this->assertTrue(CountryData::isEu($countryCode));
     }
 
+    #[DataProvider('getNonEuDataStream')]
     public function testNonEuDataStream(string $countryCode): void
     {
         $this->assertFalse(CountryData::isEu($countryCode));

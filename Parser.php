@@ -7,7 +7,7 @@ use App\Service\BinListNetValidator;
 use App\Service\ExchangeRateFetcher;
 use App\View\ReportView;
 use App\Service\CsvReporter;
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 
 $source = $argv[1];
 
@@ -15,8 +15,11 @@ $source = $argv[1];
 $client = new Client();
 $binValidator = new BinListNetValidator($client);
 $exchange = new ExchangeRateFetcher();
-
-$reporter = new CsvReporter($source, $binValidator, $exchange);
-$report = $reporter->createReport();
-$view = new ReportView($report);
-$view->show();
+try {
+    $reporter = new CsvReporter($source, $binValidator, $exchange);
+    $report = $reporter->createReport();
+    $view = new ReportView($report);
+    $view->show();
+} catch (Exception $e) {
+    die ($e->getMessage());
+}
