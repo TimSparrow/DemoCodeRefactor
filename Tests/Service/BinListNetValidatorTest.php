@@ -3,34 +3,41 @@
 namespace Test\Service;
 
 use App\Service\BinListNetValidator;
-use Guzzle\Http\ClientInterface;
+use Faker\Factory;
+use Faker\Generator;
+use GuzzleHttp\ClientInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Random\Randomizer;
 
 /**
- * @covers App\Service\BinListNetValidator
+ * @covers \App\Service\BinListNetValidator
  */
 class BinListNetValidatorTest extends MockeryTestCase
 {
     private $validator;
     private ClientInterface $client;
 
-    private Randomizer $randomizer;
+    private Generator $faker;
 
 
     public function setUp(): void
     {
         $this->client = Mockery::mock(ClientInterface::class);
         $this->validator = new BinListNetValidator($this->client);
-        $this->randomizer = new Randomizer();
+        $this->faker = Factory::create();
     }
 
 
+    /**
+     * @covers \App\Service\BinListNetValidator::getCountryByBinNumber
+     */
     public function testShouldIssueAndParseBinListNet(): void
     {
-        $bin = $this->randomizer->getInt(100000, 999999); // 6 digit random int
-        $countryCode = $this->randomCountry();
+        $bin = $this->getRandomBinNumber();
+        $countryCode = $this->getRandomCountryCode();
+
+        // create a minimal response containing the country code
         $mockReturn = $this->mockBinListNetResponse($countryCode);
         $this->client->shouldReceive('get')
             ->once()->withArgs(function($args) use ($bin) {
@@ -51,8 +58,13 @@ class BinListNetValidatorTest extends MockeryTestCase
         ]);
     }
 
-    private function randomCountry(): string
+    private function getRandomCountryCode(): string
     {
-        return $this->randomizer->getBytes(2);
+        return $this->faker->countryCode();
+    }
+
+    private function getRandomBinNumber(): string
+    {
+        return substr($this->faker->creditCardNumber(), 0, 6);
     }
 }

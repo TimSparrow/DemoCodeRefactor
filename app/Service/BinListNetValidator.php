@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Exceptions\InvalidBinException;
 use App\Service\BinValidationService;
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\ClientInterface;
 
 class BinListNetValidator implements BinValidationService
 {

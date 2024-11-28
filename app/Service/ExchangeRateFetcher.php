@@ -2,7 +2,7 @@
 
 
 namespace App\Service;
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 class ExchangeRateFetcher implements ExchangeRateInterface
 {
     private const API_URL = 'https://api.apilayer.com/exchangerates_data/latest';

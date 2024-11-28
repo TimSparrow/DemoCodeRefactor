@@ -7,7 +7,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Random\Randomizer;
 
 /**
- * @covers App\Models\Report
+ * @covers \App\Models\Report
  */
 class ReportTest extends MockeryTestCase {
 
