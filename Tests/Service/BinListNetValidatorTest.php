@@ -27,6 +27,7 @@ class BinListNetValidatorTest extends MockeryTestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->client = Mockery::mock(ClientInterface::class);
         $this->validator = new BinListNetValidator($this->client);
         $this->faker = Factory::create();

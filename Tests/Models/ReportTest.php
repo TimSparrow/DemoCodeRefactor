@@ -14,6 +14,7 @@ class ReportTest extends MockeryTestCase {
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->randomizer = new Randomizer;
     }
 

@@ -23,6 +23,7 @@ class ExchangeRateFetcherTest extends MockeryTestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->client = Mockery::mock(ClientInterface::class);
         $this->faker = Factory::create();
     }
