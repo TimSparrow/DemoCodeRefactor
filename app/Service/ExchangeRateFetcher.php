@@ -29,7 +29,7 @@ class ExchangeRateFetcher implements ExchangeRateInterface
         $headers = [
             'apikey' => $apiKey,
         ];
-        $response = $this->client->get(self::getServiceUrl($this->getBaseCurrency()),  $headers);
+        $response = $this->client->get(self::getServiceUrl($this->getBaseCurrency()),  ['headers' => $headers]);
         $rates = json_decode($response->getBody(), true);
         $this->rates = $rates['rates']; // discard the metadata
     }

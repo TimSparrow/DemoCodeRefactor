@@ -31,7 +31,7 @@ class ExchangeRateFetcherTest extends MockeryTestCase
     {
         $apiKey = $this->faker->word;
         $this->client->shouldReceive('get')->once()->withArgs(
-            function($url, $headers) use ($apiKey) {
+            function($url, $options) use ($apiKey) {
                 if (!preg_match('#^(https:.*)\?base=(.*)$#', $url, $matches)) {
                     return false;
                 }
@@ -40,7 +40,8 @@ class ExchangeRateFetcherTest extends MockeryTestCase
                     $matches[0] == ExchangeRateFetcher::getServiceUrl(self::BASE_CURRENCY) &&
                     $matches[1] == ExchangeRateFetcher::API_URL &&
                     $matches[2] == self::BASE_CURRENCY &&
-                    is_array($headers) && $headers['apikey'] == $apiKey
+                    is_array($options) && array_key_exists('headers', $options) &&
+                    $options['headers']['apikey'] == $apiKey
 
                 );
             }

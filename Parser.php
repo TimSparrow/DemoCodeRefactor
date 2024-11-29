@@ -12,11 +12,13 @@ use App\Service\CommissionReportProcessor;
 use GuzzleHttp\Client;
 
 $source = $argv[1];
+$apiKey = getenv('EXCHANGE_RATES_API_KEY');
+echo "apiKey: $apiKey\n";
 
 // The following should normally be initialized by autowiring
 $client = new Client();
 $binValidator = new BinListNetValidator($client);
-$exchange = new ExchangeRateFetcher($client, CommissionReportProcessor::BASE_CURRENCY, getenv('EXCHANGE_RATES_API_KEY'));
+$exchange = new ExchangeRateFetcher($client, CommissionReportProcessor::BASE_CURRENCY, $apiKey);
 $commissionCalculator = new CommissionCalculator();
 $reader = new FileReaderIterator($source);
 
