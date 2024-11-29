@@ -25,6 +25,7 @@ try {
     $report = $reporter->createReport();
     $view = new ReportView($report);
     $view->show();
-} catch (Exception $e) {
-    die ($e->getMessage());
+} catch (\Throwable $e) {
+    fputs (STDERR, $e->getMessage());
+    exit($e->getCode() ?: 255); // something went wrong
 }
