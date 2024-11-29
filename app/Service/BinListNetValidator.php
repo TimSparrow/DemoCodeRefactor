@@ -30,8 +30,17 @@ class BinListNetValidator implements BinValidationService
             throw new InvalidBinException("BIN number '{$binNumber}' not found");
         }
 
-        $json = json_decode($body, true);
-        return $json['country']['alpha2'];
+        $binData = json_decode($body, true);
+
+        if (!array_key_exists('country', $binData)) {
+            throw new InvalidBinException("Retrieved data has no country information");
+        }
+
+        if (!array_key_exists('alpha2', $binData['country'])) {
+            throw new InvalidBinException("Retrieved data has no country code");
+        }
+
+        return strtoupper($binData['country']['alpha2']);
     }
 
     private function getRequestUri(string $binNumber): string

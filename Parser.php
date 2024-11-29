@@ -13,7 +13,6 @@ use GuzzleHttp\Client;
 
 $source = $argv[1];
 $apiKey = getenv('EXCHANGE_RATES_API_KEY');
-echo "apiKey: $apiKey\n";
 
 // The following should normally be initialized by autowiring
 $client = new Client();
@@ -28,6 +27,6 @@ try {
     $view = new ReportView($report);
     $view->show();
 } catch (\Throwable $e) {
-    fputs (STDERR, $e->getMessage());
+    fputs (STDERR, $e->getMessage(). "\n");
     exit($e->getCode() ?: 255); // something went wrong
 }
