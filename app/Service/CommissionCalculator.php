@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Models\CountryData;
-use App\Service\CommissionInterface;
 
 class CommissionCalculator implements CommissionInterface
 {

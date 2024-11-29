@@ -4,7 +4,6 @@ namespace Test\Service;
 
 use App\Models\CountryData;
 use App\Service\BinValidationService;
-use App\Service\CommissionCalculator;
 use App\Service\CommissionInterface;
 use App\Service\CommissionReportProcessor;
 use App\Service\ExchangeRateInterface;
@@ -15,11 +14,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Constraint\Count;
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Runner\Baseline\Reader;
 
-#[CoversClass(\App\Service\CommissionReportProcessor::class)]
+#[CoversClass(CommissionReportProcessor::class)]
 class CommissionReportProcessorTest extends MockeryTestCase
 {
 
@@ -185,5 +181,11 @@ class CommissionReportProcessorTest extends MockeryTestCase
             $countries[] = $this->faker->countryCode();
         }
         return $countries;
+    }
+
+    public function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
     }
 }

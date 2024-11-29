@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use Psr\Http\Message\ResponseInterface;
 
 
-#[CoversClass(\App\Service\BinListNetValidator::class)]
+#[CoversClass(BinListNetValidator::class)]
 class BinListNetValidatorTest extends MockeryTestCase
 {
 
@@ -102,5 +102,11 @@ class BinListNetValidatorTest extends MockeryTestCase
     private function getRandomBinNumber(): string
     {
         return substr($this->faker->creditCardNumber(), 0, 6);
+    }
+
+    public function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
     }
 }

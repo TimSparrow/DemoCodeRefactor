@@ -3,9 +3,7 @@
 
 namespace App\Service;
 use App\Models\Report;
-use App\Service\BinValidationService;
-use App\Models\CountryData;
-use App\View\ReportView;
+
 class CommissionReportProcessor
 {
     public const string BASE_CURRENCY = "EUR";

@@ -5,7 +5,6 @@ namespace Test\Service;
 use App\Service\ExchangeRateFetcher;
 use Faker\Factory;
 use Faker\Generator;
-use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Response;
 use Mockery;
@@ -96,5 +95,9 @@ class ExchangeRateFetcherTest extends MockeryTestCase
             $this->assertEqualsWithDelta($amount / $rate, $amountConverted, 0.01);
         }
     }
-
+    public function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
 }

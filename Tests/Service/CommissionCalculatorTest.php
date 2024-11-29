@@ -3,9 +3,11 @@
 namespace Test\Service;
 
 use App\Service\CommissionCalculator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(CommissionCalculator::class)]
 class CommissionCalculatorTest extends TestCase
 {
     public static function commissionDataProvider(): array

@@ -2,7 +2,6 @@
 
 
 namespace App\Service;
-use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 
 class ExchangeRateFetcher implements ExchangeRateInterface
@@ -44,7 +43,12 @@ class ExchangeRateFetcher implements ExchangeRateInterface
         return $this->rates[$currencyCode];
     }
 
-    public function getAmountConverted(float $amount, string $currencyCode): float
+    public function
+
+
+
+
+    getAmountConverted(float $amount, string $currencyCode): float
     {
         if ($currencyCode === $this->getBaseCurrency()) {
             return $amount;

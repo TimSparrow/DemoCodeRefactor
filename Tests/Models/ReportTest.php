@@ -7,7 +7,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Random\Randomizer;
 
-#[CoversClass(\App\Models\Report::class)]
+#[CoversClass(Report::class)]
 class ReportTest extends MockeryTestCase {
 
     private Randomizer $randomizer;

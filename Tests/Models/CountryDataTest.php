@@ -4,12 +4,9 @@
 namespace Models;
 
 use App\Models\CountryData;
-
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-
-
 
 
 #[CoversClass(CountryData::class)]

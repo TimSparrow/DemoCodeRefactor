@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Service\ReaderInterface;
 use Generator;
 
 class FileReaderIterator implements ReaderInterface
