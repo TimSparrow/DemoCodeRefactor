@@ -2,6 +2,7 @@
 
 
 namespace App\Service;
+use App\Exceptions\InvalidBinException;
 use App\Models\Report;
 
 class CommissionReportProcessor
@@ -24,12 +25,17 @@ class CommissionReportProcessor
         $report = new Report();
 
         foreach ($this->reader->eachLine() as $line) {
-            $record = json_decode($line, true);
-            $country = $this->binValidator->getCountryByBinNumber($record['bin']);
-            $amount = $this->exchangeRates->getAmountConverted((float)$record['amount'], $record['currency']);
-            $commission = $this->commissionService->getTransactionCommission($amount, $country);
+            try {
+                $record = json_decode($line, true);
+                $country = $this->binValidator->getCountryByBinNumber($record['bin']);
+                $amount = $this->exchangeRates->getAmountConverted((float)$record['amount'], $record['currency']);
+                $commission = $this->commissionService->getTransactionCommission($amount, $country);
 
-            $report->add($commission);
+                $report->add($commission);
+            } catch (InvalidBinException $exception) {
+                fputs(STDERR, $exception->getMessage(). " processing BIN ". $record['bin']);
+                throw $exception;
+            }
         }
 
         return $report;

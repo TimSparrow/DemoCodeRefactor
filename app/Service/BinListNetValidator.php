@@ -32,6 +32,10 @@ class BinListNetValidator implements BinValidationService
 
         $binData = json_decode($body, true);
 
+        if (null === $binData) {
+            throw new InvalidBinException("BIN data is not valid");
+        }
+
         if (!array_key_exists('country', $binData)) {
             throw new InvalidBinException("Retrieved data has no country information");
         }

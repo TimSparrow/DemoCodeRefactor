@@ -27,6 +27,6 @@ try {
     $view = new ReportView($report);
     $view->show();
 } catch (\Throwable $e) {
-    fputs (STDERR, $e->getMessage(). "\n");
+    fputs (STDERR, get_class($e) . ':' . $e->getMessage(). "\n");
     exit($e->getCode() ?: 255); // something went wrong
 }
