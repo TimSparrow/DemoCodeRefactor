@@ -120,6 +120,15 @@ class CommissionReportProcessorTest extends MockeryTestCase
         }
     }
 
+    public function testTryParsingInvalidData(): void
+    {
+        $calculator = $this->getCalculator();
+        $testData = $this->generateBadSourceData();
+        $this->reader->shouldReceive('eachLine')->andYield(...$testData);
+        $this->expectException(\UnexpectedValueException::class);
+        $calculator->createReport();
+    }
+
     private function generateSourceData(int $entriesCount): array
     {
         $result = [];
@@ -190,5 +199,20 @@ class CommissionReportProcessorTest extends MockeryTestCase
     {
         Mockery::close();
         parent::tearDown();
+    }
+
+    /**
+     * A combination of malformed JSON and invalid record to trigger an exception
+     */
+    private function generateBadSourceData(): array
+    {
+        $badData = [
+            'This is not JSON',
+            '{"bin" : "335474", "amaunt" : 56.436, "carency" : 352347}',
+            '{"bin" : "853644", "amount" : 44.66"}',
+
+        ];
+
+        return $this->faker->shuffleArray($badData);
     }
 }

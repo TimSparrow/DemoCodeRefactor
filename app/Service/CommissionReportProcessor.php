@@ -24,6 +24,7 @@ class CommissionReportProcessor
     {
         $report = new Report();
         $lineNumber = 0;
+
         foreach ($this->reader->eachLine() as $line) {
             try {
                 $record = json_decode($line, true);
