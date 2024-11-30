@@ -37,11 +37,11 @@ class BinListNetValidator implements BinValidationService
         }
 
         if (!array_key_exists('country', $binData)) {
-            throw new InvalidBinException("Retrieved data has no country information");
+            throw new InvalidBinException("Retrieved data for $binNumber has no country information");
         }
 
         if (!array_key_exists('alpha2', $binData['country'])) {
-            throw new InvalidBinException("Retrieved data has no country code");
+            throw new InvalidBinException("Retrieved data for $binNumber has no country code, may be invalid BIN");
         }
 
         return strtoupper($binData['country']['alpha2']);

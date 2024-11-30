@@ -32,9 +32,9 @@ class CommissionReportProcessor
                 $commission = $this->commissionService->getTransactionCommission($amount, $country);
 
                 $report->add($commission);
-            } catch (InvalidBinException $exception) {
-                fputs(STDERR, $exception->getMessage(). " processing BIN ". $record['bin']);
-                throw $exception;
+            } catch (InvalidBinException $exception) { // ignore records with invalid BIN
+                fputs(STDERR, $exception->getMessage(). " processing BIN ". $record['bin'] . "\n");
+                continue;
             }
         }
 
