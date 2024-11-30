@@ -21,9 +21,12 @@ class CommissionReportProcessorTest extends MockeryTestCase
 
     private const int MAX_EMTRIES = 10;
 
-    private const BASE_CURRENCY = CommissionReportProcessor::BASE_CURRENCY;
+    private const string BASE_CURRENCY = CommissionReportProcessor::BASE_CURRENCY;
 
-    private const BASE_CURRENCY_PROB = 0.4;
+    private const float BASE_CURRENCY_PROB = 0.4;
+
+    // allow for rounding errors
+    private const float ROUNDING_ERROR = 0.01;
 
 
     private ExchangeRateInterface|MockInterface $exchangeRatesService;
@@ -112,7 +115,7 @@ class CommissionReportProcessorTest extends MockeryTestCase
             if ($transactionCurrency === self::BASE_CURRENCY) {
                 $this->assertEquals($returnedData[$i], $testData[$i]['amount'] * $commissionRate);
             } else {
-                $this->assertEquals($returnedData[$i], $testData[$i]['amount'] / $rates[$transactionCurrency] * $commissionRate);
+                $this->assertEqualsWithDelta($returnedData[$i], $testData[$i]['amount'] / $rates[$transactionCurrency] * $commissionRate, self::ROUNDING_ERROR);
             }
         }
     }
