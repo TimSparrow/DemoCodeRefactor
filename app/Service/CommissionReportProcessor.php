@@ -23,10 +23,11 @@ class CommissionReportProcessor
     public function createReport(): Report
     {
         $report = new Report();
-
+        $lineNumber = 0;
         foreach ($this->reader->eachLine() as $line) {
             try {
                 $record = json_decode($line, true);
+                $this->validateRecord($record, ++$lineNumber);
                 $country = $this->binValidator->getCountryByBinNumber($record['bin']);
                 $amount = $this->exchangeRates->getAmountConverted((float)$record['amount'], $record['currency']);
                 $commission = $this->commissionService->getTransactionCommission($amount, $country);
@@ -39,5 +40,18 @@ class CommissionReportProcessor
         }
 
         return $report;
+    }
+
+    private function validateRecord(?array $record, int $line): void
+    {
+        if (null === $record) {
+            throw new \UnexpectedValueException("Line '$line' is not a valid JSON record");
+        }
+
+        foreach(['bin', 'amount', 'currency'] as $key) {
+            if (!array_key_exists($key, $record)) {
+                throw new \UnexpectedValueException("Line '$line' is not a valid transaction, missing $key");
+            }
+        }
     }
 }
